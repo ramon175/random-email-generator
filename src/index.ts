@@ -28,6 +28,10 @@ const generateEmailsToFile = (
   console.log(`Generated ${numEmails} random emails and saved to ${filePath}`);
 };
 
+app.get("/", (req: Request, res: Response) => {
+  res.redirect("/generate-emails");
+});
+
 app.get("/generate-emails", (req: Request, res: Response) => {
   const numEmails = parseInt(req.query.numEmails as string) || 10;
   const suffix = req.query.suffix as string;
