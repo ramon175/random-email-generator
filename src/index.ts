@@ -14,10 +14,14 @@ const generateRandomEmail = (suffix: string = ".test"): string => {
   return email;
 };
 
-const generateEmailsToFile = (filePath: string, numEmails: number): void => {
+const generateEmailsToFile = (
+  filePath: string,
+  numEmails: number,
+  suffix?: string
+): void => {
   const emails: string[] = [];
   for (let i = 0; i < numEmails; i++) {
-    emails.push(generateRandomEmail());
+    emails.push(generateRandomEmail(suffix));
   }
   const emailText = emails.join("\n");
   fs.writeFileSync(filePath, emailText);
@@ -25,9 +29,10 @@ const generateEmailsToFile = (filePath: string, numEmails: number): void => {
 };
 
 app.get("/generate-emails", (req: Request, res: Response) => {
-  const numEmails = parseInt(req.query.numEmails as string);
+  const numEmails = parseInt(req.query.numEmails as string) || 10;
+  const suffix = req.query.suffix as string;
   const filePath = path.resolve(`${__dirname}/output.txt`);
-  generateEmailsToFile(filePath, numEmails);
+  generateEmailsToFile(filePath, numEmails, suffix);
 
   res.download(filePath, "output.txt", (err) => {
     if (err) {
